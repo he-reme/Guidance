@@ -19,70 +19,48 @@
     </div>
   </div>
   <div class="col-xs-12 col-md-1 section-container-spacer">
-    <a href="{% url 'review_academy' %}" id="academy" class="btn btn-primary" onclick="academyButton(this)" title=""> 학원 </a>
+    <a href="{% url 'review_academy' %}" id="academy" class="btn btn-default" title=""> 학원 </a>
   </div>
   <div class="col-xs-12 col-md-1 section-container-spacer">
-    <a href="{% url 'review_testsite' %}" id="testsite" class="btn btn-default" onclick="testsiteButton(this)" title=""> 시험장 </a>
+    <a href="{% url 'review_testsite' %}" id="testsite" class="btn btn-primary" title=""> 시험장 </a>
   </div>
 
-  {% if academyReview %}
+  {% if testsiteReview %}
   <table class="table table-bordered">
     <thead>
-
+      <tr>
+        <th>제목</th><th>시험장 이름</th><th>위치</th><th>작성일</th><th></th>
+      </tr>
     </thead>
     <tbody>
-      {% for review in academyReview %}
+      {% for review in testsiteReview %}
       <tr>
-        <td> {{ review.academy_id.name }} </td>
-        <td> {{ review.academy_id.address_city }} </td>
-        <td> {{ review.academy_id.address_town }} </td>
         <td> {{ review.title }} </td>
+        <td> {{ review.testsite_id.name }} </td>
+        <td> {{ review.testsite_id.address_full }} </td>
         <td> {{ review.writedate }} </td>
-        <td><button onclick="academyDelete('{{ review.pk }}')">삭제</button></td>
+        <td><button onclick="testsiteDelete('{{ review.pk }}')">삭제하기</button></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   {% else %}
   <br>
-
   <div class="col-xs-12 section-container-spacer">
     <p>아직 내용이 없습니다</p>
   </div>
   {% endif %}
-
-
-  {% if testsiteReview %}
-  <table>
-    {% for review in testsiteReview %}
-      <tr>
-        <td> {{ review.testsite_id.name }} </td>
-        <td> {{ review.testsite_id.address_city }} </td>
-        <td> {{ review.testsite_id.address_town }} </td>
-        <td> {{ review.title }} </td>
-        <td> {{ review.writedate }} </td>
-        <td><button onclick="testsiteDelete('{{ review.pk }}')">삭제</button></td>
-      </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
+  <h5>
+	{% if testsiteReview.has_previous %}
+		<a href='?page={{testsiteReview.number|add:-1}}'>이전페이지</a>
+	{% endif %}
+	Page {{ testsiteReview.number }} / {{ testsiteReview.paginator.num_pages }}
+	{% if testsiteReview.has_next %}
+		<a href='?page={{testsiteReview.number|add:+1}}'>다음페이지</a>
+	{% endif %}
+  </h5>
 </main>
 <script>
-  function academyButton(p){
-    $(p).attr('class','btn btn-default');
-    $(#testsite).attr('class','btn btn-primary');
-  }
-
-  function testsiteButton(p){
-    $(p).attr('class','btn btn-default');
-    $(#academy).attr('class','btn btn-primary');
-  }
-  function academyDelete(pk){
-    let result = confirm("정말로 삭제하겠습니까??");
-    if(result)
-      location.href = "{% url 'delete_academy' %}?pk="+pk;
-  }
-
   function testsiteDelete(pk){
     let result = confirm("정말로 삭제하겠습니까??");
     if(result)
